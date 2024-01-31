@@ -1,6 +1,6 @@
 export function InputBar(props) {
   return (
-    <div>
+    <div className="flex-1">
       <input
         type={`${props.type}`}
         // type="password"
