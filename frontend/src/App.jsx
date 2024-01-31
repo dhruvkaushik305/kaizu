@@ -1,9 +1,9 @@
-import { SignupPage } from "./pages/SignupPage";
+import { SigninPage } from "./pages/SigninPage";
 
 function App() {
   return (
     <div>
-      <SignupPage />
+      <SigninPage />
     </div>
   );
 }
