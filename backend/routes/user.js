@@ -62,7 +62,7 @@ router.post("/signin", (req, res) => {
       email: req.body.email,
     }).then((user) => {
       if (user) {
-        bcrypt.compare(user.password, req.body.password).then((result) => {
+        bcrypt.compare(req.body.password, user.password).then((result) => {
           if (result) {
             return res.status(200).json({
               token: jwt.sign({ userId: user._id }, process.env.JWT_SECRET),

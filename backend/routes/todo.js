@@ -3,8 +3,10 @@ const auth = require("../middlewares/auth");
 const router = express.Router();
 const z = require("zod");
 const { Todo, User } = require("../db");
-const todoSchema = z.string();
-router.get("/listTodos", auth, (req, res) => {
+const todoSchema = z.object({
+  todo: z.string(),
+});
+router.get("/list", auth, (req, res) => {
   User.findOne({ _id: req.userId }).then((user) => {
     if (user) {
       Todo.find({ _id: { $in: user.todos } }).then((userTodos) => {
@@ -15,7 +17,7 @@ router.get("/listTodos", auth, (req, res) => {
     }
   });
 });
-router.post("/addTodo", auth, (req, res) => {
+router.post("/add", auth, (req, res) => {
   const { success } = todoSchema.safeParse(req.body);
   if (success) {
     Todo.create({
@@ -23,12 +25,13 @@ router.post("/addTodo", auth, (req, res) => {
       completed: false,
     }).then((todo) => {
       User.updateOne({ _id: req.userId }, { $push: { todos: todo._id } });
+      res.status(201).json({ message: "Todo added" });
     });
   } else {
     return res.status(400).json({ message: "incorrect inputs" });
   }
 });
-router.put("/toggleTodo", auth, (req, res) => {
+router.put("/toggle", auth, (req, res) => {
   Todo.findOne({
     _id: req.body.id,
   })
